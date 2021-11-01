@@ -11,27 +11,12 @@ import sequelize from '../sequelize';
 import {
   FRONTEND_APP_URL,
   PROD,
-  RECAPTCHA_SECRET_KEY,
-  RECAPTCHA_URL,
 } from '../util/secrets';
 import { sendMailMsg, changePasswordMsg } from '../config/nodemailer';
 
 import { User } from '../models/User';
 import { UserPassword } from '../models/UserPassword';
 
-export const checkCaptcha: Middleware = async (req, res, next) => {
-  if (!PROD) {
-    return next();
-  }
-  const { captcha } = req.body;
-  const recaptcha = await axios.post(
-    `${RECAPTCHA_URL}?secret=${RECAPTCHA_SECRET_KEY}&response=${captcha}`
-  );
-  if (!recaptcha.data.success) {
-    return sendtype(res, 404, { message: 'Captcha' });
-  }
-  return next();
-};
 
 export const authWithPassword: Middleware = async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {

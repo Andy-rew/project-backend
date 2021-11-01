@@ -5,34 +5,37 @@ import {
   AllowNull,
   ForeignKey,
   PrimaryKey,
-  BelongsTo,
 } from 'sequelize-typescript';
 
 import { DB_SCHEMA } from '../util/secrets';
 import { User } from './User';
-import { Organization } from './Organization';
 
 @Table({
-  comment: 'Промежуточная таблица между пользователем и организацией',
+  comment: 'промужуточная таблица зависимостей',
   timestamps: false,
   schema: DB_SCHEMA,
 })
-export class UserOrganization extends Model<UserOrganization> {
-  @BelongsTo(() => User)
-  user: User;
-
-  @BelongsTo(() => Organization)
-  organization: Organization;
+export class Dependences extends Model<Dependences> {
 
   @PrimaryKey
+  @Column
+  registryNumber: number;
+
+ @Column
+ @ForeignKey(() => User)
+ guilty: number[]
+
+  @Column
   @ForeignKey(() => User)
-  @AllowNull(false)
-  @Column
-  userId: number;
+  victim: number[]
 
-  @PrimaryKey
-  @ForeignKey(() => Organization)
-  @AllowNull(false)
-  @Column
-  organizationId: number;
+ @Column
+  @ForeignKey(() => User)
+  suspect: number[]
+
+@Column
+  @ForeignKey(() => User)
+  witness: number[]
+
+
 }
