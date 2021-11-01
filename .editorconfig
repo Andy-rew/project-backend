@@ -1,0 +1,12 @@
+root=true
+
+[*.{ts,js,json}]
+indent_style = space
+indent_size = 2
+
+[{.eslintrc}]
+indent_style = space
+indent_size = 2
+
+[package.json]
+indent_size = 4

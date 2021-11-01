@@ -1,0 +1,38 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript", "typescript"],
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false
+  },
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/dist": true,
+    "**/coverage": true
+  },
+  "typescript.referencesCodeLens.enabled": true,
+  "appService.zipIgnorePattern": [".vscode{,/**}"],
+  "appService.deploySubpath": "",
+  "indentRainbow.colors": [
+    "rgba(16,16,16,0.1)",
+    "rgba(16,16,16,0.2)",
+    "rgba(16,16,16,0.3)",
+    "rgba(16,16,16,0.4)",
+    "rgba(16,16,16,0.5)",
+    "rgba(16,16,16,0.6)",
+    "rgba(16,16,16,0.7)",
+    "rgba(16,16,16,0.8)",
+    "rgba(16,16,16,0.9)",
+    "rgba(16,16,16,1.0)"
+  ]
+}

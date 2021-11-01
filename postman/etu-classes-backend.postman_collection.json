@@ -1,0 +1,456 @@
+{
+	"info": {
+		"_postman_id": "3a70efa1-b1a1-457b-ab42-ab118d04df18",
+		"name": "etu-classes-backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Авторизация",
+			"item": [
+				{
+					"name": "Логин-пароль",
+					"item": [
+						{
+							"name": "Проверка активационного кода",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{server}}{{prefix}}/auth/signup/:code",
+									"host": [
+										"{{server}}{{prefix}}"
+									],
+									"path": [
+										"auth",
+										"signup",
+										":code"
+									],
+									"variable": [
+										{
+											"key": "code",
+											"value": "9bfd1fa9b01ebb7653f60aeac837dfbec553c0368e608d3b2ee2ff91603ba996",
+											"type": "string"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Регистрация",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"surname\": \"Григорьев\",\r\n    \"name\": \"Иван\",\r\n    \"midname\": \"Сергеевич\",\r\n    \"email\": \"grigorievivan.1@mail.ru\",\r\n    \"password\": \"test\",\r\n    \"samePasswordForConfirm\": \"test\",\r\n    \"activationCode\": \"9bfd1fa9b01ebb7653f60aeac837dfbec553c0368e608d3b2ee2ff91603ba996\",\r\n    \"userId\": 2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server}}{{prefix}}/auth/signup",
+									"host": [
+										"{{server}}{{prefix}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Смена пароля. Проверить email, поставить активационный код",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"some@mail.ru\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server}}{{prefix}}/auth/password-change/set-code",
+									"host": [
+										"{{server}}{{prefix}}"
+									],
+									"path": [
+										"auth",
+										"password-change",
+										"set-code"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Смена пароля",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\": \"test123\",\r\n    \"samePasswordForConfirm\": \"test123\",\r\n    \"activationCode\": \"147b787d7dbe40ea5a11546c173875dbd2a88f9d4c660b0d3d45829750e9f837\",\r\n    \"userId\": 2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{server}}{{prefix}}/auth/password-change",
+									"host": [
+										"{{server}}{{prefix}}"
+									],
+									"path": [
+										"auth",
+										"password-change"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Авторизация (логин пароль)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "login",
+											"value": "grigorievivan.1@mail.ru",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "test",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{server}}{{prefix}}/auth/login",
+									"host": [
+										"{{server}}{{prefix}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Dev Auth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{prefix}}/auth/dev?roles=admin&roles=teacher&roles=student&roles=curator&roles=contentmanager&noRedirect=true",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"auth",
+								"dev"
+							],
+							"query": [
+								{
+									"key": "roles",
+									"value": "admin"
+								},
+								{
+									"key": "roles",
+									"value": "teacher"
+								},
+								{
+									"key": "roles",
+									"value": "student"
+								},
+								{
+									"key": "roles",
+									"value": "curator"
+								},
+								{
+									"key": "roles",
+									"value": "contentmanager"
+								},
+								{
+									"key": "noRedirect",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dev Auth (юзер)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{prefix}}/auth/dev?userId=2&noRedirect=true",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"auth",
+								"dev"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2"
+								},
+								{
+									"key": "noRedirect",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{prefix}}/auth/current-user",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"auth",
+								"current-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Логаут",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{prefix}}/auth/logout",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Админ",
+			"item": [
+				{
+					"name": "Пригласить пользователя в систему",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"surname\": \"Григорьев\",\r\n    \"name\": \"Иван\",\r\n    \"midname\": \"Сергеевич\",\r\n    \"email\": \"some@mail.ru\",\r\n    \"roles\": [\"teacher\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{prefix}}/admin/users/invite",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"invite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Список пользователей",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{prefix}}/admin/users",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Logging",
+			"item": [
+				{
+					"name": "Client logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{prefix}}/logs/client?limit=20&offset=0",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"logs",
+								"client"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rest logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{prefix}}/logs/rest/:type?fileName=0",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"logs",
+								"rest",
+								":type"
+							],
+							"query": [
+								{
+									"key": "fileName",
+									"value": "0",
+									"description": "0 - последний"
+								}
+							],
+							"variable": [
+								{
+									"key": "type",
+									"value": "info",
+									"type": "string",
+									"description": "info или error"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Client logs",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"logs\": [\r\n\t\t{\r\n\t\t\t\"userId\": 1,\r\n\t\t\t\"severity\": \"debug\",\r\n\t\t\t\"message\": { \"text\": \"Hello\" },\r\n\t\t\t\"timestamp\": \"2020-05-19 18:32\",\r\n\t\t\t\"page\": \"/hello/\",\r\n\t\t\t\"error\": null\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"userId\": 1,\r\n\t\t\t\"severity\": \"info\",\r\n\t\t\t\"message\": { \"text\": \"World\" },\r\n\t\t\t\"timestamp\": \"2020-05-19 18:32\",\r\n\t\t\t\"page\": \"/hello/world\",\r\n\t\t\t\"error\": null\r\n\t\t}\r\n\t]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{prefix}}/logs/client",
+							"host": [
+								"{{server}}{{prefix}}"
+							],
+							"path": [
+								"logs",
+								"client"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "http://localhost:3005"
+		},
+		{
+			"key": "prefix",
+			"value": "/etuclasses/api"
+		}
+	]
+}
