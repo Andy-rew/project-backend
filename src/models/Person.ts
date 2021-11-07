@@ -10,22 +10,27 @@ import {
   Model, PrimaryKey,
   Table,
   Unique,
-  UpdatedAt
+  UpdatedAt,
+  HasMany, BelongsToMany, BelongsTo
 } from 'sequelize-typescript';
 
 import { DB_SCHEMA } from '../util/secrets';
+import { Relation } from './Relation';
+import { Accident } from './Accident';
 
-@DefaultScope(() => ({
-  attributes: {
-    exclude: ['createdAt', 'updatedAt', 'deletedAt'],
-  },
-}))
-@Table({ comment: 'Пользователи', schema: DB_SCHEMA })
-export class User extends Model<User> {
+
+@Table({ comment: 'Лица', schema: DB_SCHEMA })
+export class Person extends Model<Person> {
+
+  @HasMany(() => Relation)
+  relationsLink: Relation[];
+
+  @BelongsToMany(() => Accident, () => Relation)
+  acccidentPerson: Accident[];
 
   @PrimaryKey
   @Column
-  personalId!: number;
+  personId!: number;
 
   @Column
   name!: string;
@@ -40,7 +45,7 @@ export class User extends Model<User> {
   address?: string;
 
   @Column
-  records?: number;
+  convictNum?: number;
 
   @CreatedAt
   @Column

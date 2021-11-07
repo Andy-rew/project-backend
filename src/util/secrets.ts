@@ -52,33 +52,4 @@ if (!DB_NAME || !DB_USER || !DB_PASS || !DB_SCHEMA) {
   process.exit(1);
 }
 
-export const EMAIL_HOST = process.env.EMAIL_HOST;
-export const EMAIL_ACCOUNT_LOGIN = process.env.EMAIL_ACCOUNT_LOGIN;
-export const EMAIL_PORT = process.env.EMAIL_PORT;
-export const EMAIL_ACCOUNT_PASW = process.env.EMAIL_ACCOUNT_PASW;
-export const EMAIL_SECURE = process.env.EMAIL_SECURE;
-export const EMAIL_ACCOUNT_ADDR = process.env.EMAIL_ACCOUNT_ADDR;
 
-if (
-  !EMAIL_HOST ||
-  !EMAIL_ACCOUNT_LOGIN ||
-  !EMAIL_PORT ||
-  !EMAIL_ACCOUNT_PASW ||
-  !EMAIL_SECURE ||
-  !EMAIL_ACCOUNT_ADDR
-) {
-  logger.error(
-    'No Node Mailer settings. Set EMAIL_HOST, EMAIL_ACCOUNT_LOGIN, EMAIL_PORT, EMAIL_ACCOUNT_PASW, EMAIL_SECURE, EMAIL_ACCOUNT_ADDR environment variables.'
-  );
-  process.exit(1);
-}
-
-export const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
-export const RECAPTCHA_URL = process.env.RECAPTCHA_URL;
-
-if (!RECAPTCHA_SECRET_KEY || !RECAPTCHA_URL) {
-  logger.error(
-    'No RECAPTCHA settings. Set RECAPTCHA_SECRET_KEY, RECAPTCHA_URL environment variables.'
-  );
-  process.exit(1);
-}

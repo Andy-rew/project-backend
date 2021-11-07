@@ -15,15 +15,14 @@ import asyncHandler from './util/asyncHandler';
 import logger, { LoggerStream } from './util/logger';
 import sequelize from './sequelize';
 import { ENVIRONMENT, FRONTEND_APP_URL, SESSION_SECRET } from './util/secrets';
-import { ensureLoggedIn, reqAnyOfRoles } from './util/roles';
 
 // models
-import { User, UserRoles } from './models/User';
+//import { User, UserRoles } from './models/Person';
 
 // controllers
-import * as authController from './controllers/auth';
-import * as loggingController from './controllers/logging';
-import * as adminController from './controllers/admin';
+// import * as authController from './controllers/auth';
+// import * as loggingController from './controllers/logging';
+// import * as adminController from './controllers/admin';
 
 const prod = ENVIRONMENT === 'production';
 
@@ -47,15 +46,6 @@ export const corsOptions = {
   },
 };
 
-export const getLogUser = (user: User): string => {
-  if (!user) {
-    return '-';
-  } else if (!user.actualUser) {
-    return `id=${user.id} ${user.initials}`;
-  } else {
-    return `id=${user.id} ${user.initials} (id=${user.actualUser.id} ${user.actualUser.initials})`;
-  }
-};
 
 // Create Polka server
 const app = polka({
@@ -66,18 +56,7 @@ const app = polka({
     const sendReal = !prod || process.env.STAGING === 'true';
     const errorMessage = sendReal ? realErrMessage : STATUS_CODES[code];
 
-    logger.error({
-      message: realErrMessage,
-      stacktrace: err.stack,
-      path: req.path,
-      method: req.method,
-      query: {
-        query: req.query,
-        body: req.body,
-        params: req.params,
-      },
-      user: getLogUser(req.user),
-    });
+
 
     if (ENVIRONMENT === 'test') {
       console.error(err);
@@ -131,7 +110,6 @@ const morganFormat =
     ? '":remote-addr",":req[x-real-ip]",":remote-user",":auth-user",":method :url HTTP/:http-version",":status",":response-time ms",":res[content-length]",":referrer",":user-agent"'
     : 'dev';
 
-morgan.token('auth-user', (req: any) => getLogUser(req.user));
 
 app.use(morgan(morganFormat, { stream: new LoggerStream() }));
 
@@ -141,20 +119,20 @@ app.use((req: any, res, next) => {
   req.middlewareData = {};
   next();
 });
-app.use((req, res, next) => {
-  if (
-    req.method === 'POST' ||
-    req.method === 'PUT' ||
-    req.method === 'DELETE'
-  ) {
-    if ((req.user as User)?.actualUser && process.env.STAGING !== 'true') {
-      return sendtype(res, 401, {
-        message: 'Действие недоступно в режиме просмотра',
-      });
-    }
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   if (
+//     req.method === 'POST' ||
+//     req.method === 'PUT' ||
+//     req.method === 'DELETE'
+//   ) {
+//     if ((req.user as User)?.actualUser && process.env.STAGING !== 'true') {
+//       return sendtype(res, 401, {
+//         message: 'Действие недоступно в режиме просмотра',
+//       });
+//     }
+//   }
+//   next();
+// });
 
 /**
  * Primary app routes.
@@ -162,72 +140,7 @@ app.use((req, res, next) => {
  */
 export const pathPrefix = '/etuclasses/api';
 
-// Авторизация
-app.get(
-  `${pathPrefix}/auth/current-user`,
-  asyncHandler(authController.getCurrUser)
-);
-// LocalStrategy
-app.post(
-  `${pathPrefix}/auth/login`,
-  authController.checkCaptcha,
-  asyncHandler(authController.authWithPassword)
-);
-app.get(`${pathPrefix}/auth/logout`, asyncHandler(authController.logout));
-app.get(
-  `${pathPrefix}/auth/signup/:code`,
-  asyncHandler(authController.activationCodeCheck)
-);
-app.put(`${pathPrefix}/auth/signup`, asyncHandler(authController.signUp));
-app.put(
-  `${pathPrefix}/auth/password-change/set-code`,
-  authController.checkCaptcha,
-  asyncHandler(authController.checkEmailAndSetActivationCode)
-);
-app.put(
-  `${pathPrefix}/auth/password-change`,
-  asyncHandler(authController.passwordChange)
-);
 
-// ЛОГИ
-app.get(
-  `${pathPrefix}/logs/client`,
-  ensureLoggedIn,
-  reqAnyOfRoles([UserRoles.admin]),
-  asyncHandler(loggingController.getLogs)
-);
-app.post(
-  `${pathPrefix}/logs/client`,
-  ensureLoggedIn,
-  asyncHandler(loggingController.createLogs)
-);
-app.get(
-  `${pathPrefix}/logs/rest/:type`,
-  ensureLoggedIn,
-  reqAnyOfRoles([UserRoles.admin]),
-  asyncHandler(loggingController.getApiLogs)
-);
 
-// АДМИН
-app.get(
-  `${pathPrefix}/admin/users`,
-  ensureLoggedIn,
-  reqAnyOfRoles(prod ? [UserRoles.admin] : null),
-  asyncHandler(adminController.getAllUsers)
-);
-app.post(
-  `${pathPrefix}/admin/users/invite`,
-  ensureLoggedIn,
-  reqAnyOfRoles([UserRoles.admin]),
-  asyncHandler(adminController.inviteUser)
-);
-
-/**
- * Dev routes.
- *
- */
-if (!prod || process.env.STAGING === 'true') {
-  app.get(`${pathPrefix}/auth/dev`, asyncHandler(authController.devAuth));
-}
 
 export default app;
