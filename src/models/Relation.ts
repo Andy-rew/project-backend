@@ -1,25 +1,26 @@
-import crypto from 'crypto';
-import moment from 'moment';
-import _ from 'lodash';
 import {
   Model,
   Column,
   Table,
   CreatedAt,
   UpdatedAt,
-  DeletedAt,
   AllowNull,
   ForeignKey,
-  BelongsTo,
-  BeforeCreate,
-  BeforeUpdate,
   DataType,
   PrimaryKey, AutoIncrement
 } from 'sequelize-typescript';
 
 import { DB_SCHEMA } from '../util/secrets';
 import { Accident } from './Accident';
-import { Person } from './Person';
+import { People } from './People';
+
+
+export enum Role {
+  culprit = 'culprit', //виновник
+  victim = 'victim', // потерпевший
+  suspect = 'suspect', // подозреваемый
+  witness = 'witness' // свидетель
+}
 
 
 @Table({
@@ -28,27 +29,12 @@ import { Person } from './Person';
 })
 export class Relation extends Model<Relation> {
 
-  // @BelongsTo(() => Person)
-  // person: Person;
-  //
-  // @BelongsTo(() => Accident)
-  // accident: Accident;
+  // @PrimaryKey
+  // @AutoIncrement
+  // @Column
+  // id!: number;
 
-  @PrimaryKey
-  @AutoIncrement
-  @Column
-  id!: number;
-
-  @CreatedAt
-  @Column
-  createdAt!: Date;
-
-  @UpdatedAt
-  @Column
-  updatedAt!: Date;
-
-
- @ForeignKey(() => Person)
+ @ForeignKey(() => People)
   @AllowNull(false)
   @Column
   personId!: number;
@@ -57,5 +43,18 @@ export class Relation extends Model<Relation> {
   @AllowNull(true)
   @Column
   accidentId?: number;
+
+  @AllowNull(false)
+  @Column(DataType.ENUM(...Object.values(Role)))
+  role: Role
+
+
+  @CreatedAt
+  @Column
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column
+  updatedAt!: Date;
 
 }

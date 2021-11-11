@@ -8,7 +8,7 @@ import {
 
 import { DB_SCHEMA } from '../util/secrets';
 import { Relation } from './Relation';
-import { Person } from './Person';
+import { People } from './People';
 
 @Table({
   comment: 'События',
@@ -19,8 +19,8 @@ export class Accident extends Model<Accident> {
   @HasMany(() => Relation)
   relationsLink: Relation[];
 
-  @BelongsToMany(() => Person, () => Relation)
-  personAccident: Person[];
+  @BelongsToMany(() => People, () => Relation)
+  personAccident: People[];
 
   @PrimaryKey
   @AutoIncrement

@@ -20,7 +20,7 @@
         "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"yarn run watch-ts\" \"yarn run serve-debug\"",
         "production": "NODE_ENV=production yarn start",
         "clear-db": "ts-node util/clear-db",
-        "prepare-test": "NODE_ENV=test ts-node --files util/prepare-test",
+        "fill-db": "ts-node util/fill-db",
         "set-build-time": "bash util/set_build_time.sh"
     },
     "dependencies": {

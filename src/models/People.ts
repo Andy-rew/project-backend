@@ -20,7 +20,7 @@ import { Accident } from './Accident';
 
 
 @Table({ comment: 'Лица', schema: DB_SCHEMA })
-export class Person extends Model<Person> {
+export class People extends Model<People> {
 
   @HasMany(() => Relation)
   relationsLink: Relation[];
@@ -28,9 +28,9 @@ export class Person extends Model<Person> {
   @BelongsToMany(() => Accident, () => Relation)
   acccidentPerson: Accident[];
 
-  @PrimaryKey
-  @Column
-  personId!: number;
+  // @PrimaryKey
+  // @Column
+  // personId!: number;
 
   @Column
   name!: string;
