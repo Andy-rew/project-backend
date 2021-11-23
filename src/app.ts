@@ -20,7 +20,8 @@ import { ENVIRONMENT, FRONTEND_APP_URL, SESSION_SECRET } from './util/secrets';
 //import { User, UserRoles } from './models/Person';
 
 // controllers
-// import * as authController from './controllers/auth';
+ import * as userController from './controllers/user';
+import { deleteAccidents } from './controllers/user';
 // import * as loggingController from './controllers/logging';
 // import * as adminController from './controllers/admin';
 
@@ -82,25 +83,23 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
 
 // Session things
-const SequelizeStore = ConnectSessionSequelize(session.Store);
-const store = new SequelizeStore({
-  db: sequelize,
-  table: 'Session',
-  extendDefaultFields: (defaults, session) => ({
-    data: defaults.data,
-    expires: defaults.expires,
-    userId: session.passport?.user?.id,
-  }),
-  expiration: 7 * 24 * 60 * 60 * 1000,
-});
-export const sessionMiddleware = session({
-  resave: false,
-  saveUninitialized: false,
-  secret: SESSION_SECRET,
-  store,
-});
+// const SequelizeStore = ConnectSessionSequelize(session.Store);
+// const store = new SequelizeStore({
+//   db: sequelize,
+//   table: 'Session',
+//   extendDefaultFields: (defaults, session) => ({
+//     data: defaults.data,
+//     userId: session.passport?.user?.id,
+//   }),
+// });
+// export const sessionMiddleware = session({
+//   resave: false,
+//   saveUninitialized: false,
+//   secret: SESSION_SECRET,
+//   store,
+// });
 
-app.use(sessionMiddleware);
+//app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -119,28 +118,17 @@ app.use((req: any, res, next) => {
   req.middlewareData = {};
   next();
 });
-// app.use((req, res, next) => {
-//   if (
-//     req.method === 'POST' ||
-//     req.method === 'PUT' ||
-//     req.method === 'DELETE'
-//   ) {
-//     if ((req.user as User)?.actualUser && process.env.STAGING !== 'true') {
-//       return sendtype(res, 401, {
-//         message: 'Действие недоступно в режиме просмотра',
-//       });
-//     }
-//   }
-//   next();
-// });
+
 
 /**
  * Primary app routes.
  *
  */
-export const pathPrefix = '/etuclasses/api';
+export const pathPrefix = '/api';
 
 
-
+app.get(`${pathPrefix}/accidents`, asyncHandler(userController.getAccidents));
+app.get(`${pathPrefix}/accidents/date`, asyncHandler(userController.getAccidentsDate));
+app.delete(`${pathPrefix}/accidents/delete/:id`, asyncHandler(userController.deleteAccidents));
 
 export default app;

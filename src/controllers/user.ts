@@ -13,6 +13,20 @@
 //   sendtype(res, 200, users);
 // };
 //
+
+// export const deleteUser = async (req: Request, res: ServerResponse) => {
+//   const { userId } = req.params;
+//   const user = await User.findByPk(userId);
+//   if (!user) {
+//     return sendtype(res, 404, { message: 'Not found' });
+//   }
+//   await user.destroy();
+//   sendtype(res, 200, { message: 'ok' });
+// };
+
+
+
+
 // export const inviteUser: Middleware = async (req, res) => {
 //   const { surname, name, midname, email, roles } = req.body;
 //
@@ -55,3 +69,40 @@
 //     })
 //   );
 // };
+
+
+import { Request } from 'polka';
+import { ServerResponse } from 'http';
+import { Accident } from '../models/Accident';
+import sendtype from '@polka/send-type';
+import { Op } from 'sequelize';
+
+export const getAccidents = async (req: Request, res: ServerResponse) => {
+  const { rows: accidents, count } = await Accident.findAndCountAll();
+
+  sendtype(res, 200, {accidents, count});
+};
+
+export const getAccidentsDate = async (req: Request, res: ServerResponse) => {
+  const {start, end} = req.query;
+  const { rows: accidents, count } = await Accident.findAndCountAll({where:{
+    registerDate:  {
+    [Op.between]: [
+      start,
+      end,
+    ] as any,
+  },
+    }});
+
+  sendtype(res, 200, {accidents, count});
+};
+
+export const deleteAccidents = async (req: Request, res: ServerResponse) => {
+  const { id } = req.params;
+  const accident = await Accident.findByPk(id);
+  if (!accident) {
+    return sendtype(res, 404, { message: 'Not found' });
+  }
+  await accident.destroy();
+  sendtype(res, 200, {message: 'ok'});
+};

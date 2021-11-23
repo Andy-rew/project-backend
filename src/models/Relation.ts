@@ -29,11 +29,6 @@ export enum Role {
 })
 export class Relation extends Model<Relation> {
 
-  // @PrimaryKey
-  // @AutoIncrement
-  // @Column
-  // id!: number;
-
  @ForeignKey(() => People)
   @AllowNull(false)
   @Column
