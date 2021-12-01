@@ -21,7 +21,7 @@ import { ENVIRONMENT, FRONTEND_APP_URL, SESSION_SECRET } from './util/secrets';
 
 // controllers
  import * as userController from './controllers/user';
-import { deleteAccidents } from './controllers/user';
+import { deleteAccidents, deletePerson, getAccidentsOfPerson, getPeople } from './controllers/user';
 // import * as loggingController from './controllers/logging';
 // import * as adminController from './controllers/admin';
 
@@ -128,7 +128,10 @@ export const pathPrefix = '/api';
 
 
 app.get(`${pathPrefix}/accidents`, asyncHandler(userController.getAccidents));
+app.get(`${pathPrefix}/accidents/personal/:id`, asyncHandler(userController.getAccidentsOfPerson));
+app.get(`${pathPrefix}/people`, asyncHandler(userController.getPeople));
 app.get(`${pathPrefix}/accidents/date`, asyncHandler(userController.getAccidentsDate));
 app.delete(`${pathPrefix}/accidents/delete/:id`, asyncHandler(userController.deleteAccidents));
+app.delete(`${pathPrefix}/people/delete/:id`, asyncHandler(userController.deletePerson));
 
 export default app;

@@ -76,11 +76,22 @@ import { ServerResponse } from 'http';
 import { Accident } from '../models/Accident';
 import sendtype from '@polka/send-type';
 import { Op } from 'sequelize';
+import { People } from '../models/People';
+import { Relation } from '../models/Relation';
 
 export const getAccidents = async (req: Request, res: ServerResponse) => {
   const { rows: accidents, count } = await Accident.findAndCountAll();
-
   sendtype(res, 200, {accidents, count});
+};
+
+export const getPeople = async (req: Request, res: ServerResponse) => {
+  const people = await People.findAll();
+  sendtype(res, 200, {people});
+};
+
+export const getAccidentsOfPerson = async (req: Request, res: ServerResponse) => {
+  const { count } = await Relation.findAndCountAll({where:{personId: req.params.id}});
+  sendtype(res, 200, { count });
 };
 
 export const getAccidentsDate = async (req: Request, res: ServerResponse) => {
@@ -104,5 +115,15 @@ export const deleteAccidents = async (req: Request, res: ServerResponse) => {
     return sendtype(res, 404, { message: 'Not found' });
   }
   await accident.destroy();
+  sendtype(res, 200, {message: 'ok'});
+};
+
+export const deletePerson = async (req: Request, res: ServerResponse) => {
+  const { id } = req.params;
+  const person = await People.findByPk(id);
+  if (!person) {
+    return sendtype(res, 404, { message: 'Not found' });
+  }
+  await person.destroy();
   sendtype(res, 200, {message: 'ok'});
 };
