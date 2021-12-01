@@ -127,3 +127,17 @@ export const deletePerson = async (req: Request, res: ServerResponse) => {
   await person.destroy();
   sendtype(res, 200, {message: 'ok'});
 };
+
+
+export const createPerson = async (req: Request, res: ServerResponse) => {
+  const { person }  = req.params;
+
+console.log( req.query);
+  //await People.create();
+
+
+
+
+
+
+};

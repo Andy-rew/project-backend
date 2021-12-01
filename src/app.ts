@@ -133,5 +133,6 @@ app.get(`${pathPrefix}/people`, asyncHandler(userController.getPeople));
 app.get(`${pathPrefix}/accidents/date`, asyncHandler(userController.getAccidentsDate));
 app.delete(`${pathPrefix}/accidents/delete/:id`, asyncHandler(userController.deleteAccidents));
 app.delete(`${pathPrefix}/people/delete/:id`, asyncHandler(userController.deletePerson));
+app.post(`${pathPrefix}/people/create`, asyncHandler(userController.createPerson));
 
 export default app;
