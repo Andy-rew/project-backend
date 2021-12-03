@@ -1,76 +1,3 @@
-// import moment from 'moment';
-// import sendtype from '@polka/send-type';
-// import { STATUS_CODES } from 'http';
-// import { Middleware } from 'polka';
-// import { Op } from 'sequelize';
-//
-// import sequelize from '../sequelize';
-// import { PROD } from '../util/secrets';
-//
-//
-// export const getAllUsers: Middleware = async (_req, res) => {
-//   const users = await User.findAll();
-//   sendtype(res, 200, users);
-// };
-//
-
-// export const deleteUser = async (req: Request, res: ServerResponse) => {
-//   const { userId } = req.params;
-//   const user = await User.findByPk(userId);
-//   if (!user) {
-//     return sendtype(res, 404, { message: 'Not found' });
-//   }
-//   await user.destroy();
-//   sendtype(res, 200, { message: 'ok' });
-// };
-
-
-
-
-// export const inviteUser: Middleware = async (req, res) => {
-//   const { surname, name, midname, email, roles } = req.body;
-//
-//   let user = await User.findOne({ where: { email: { [Op.iLike]: email } } });
-//   if (user) {
-//     return sendtype(res, 400, { message: STATUS_CODES[400] });
-//   }
-//
-//   let userPassword: Relation;
-//   await sequelize.transaction(async (t) => {
-//     user = await User.create(
-//       {
-//         surname,
-//         name,
-//         midname,
-//         email,
-//         isActivated: false,
-//         roles,
-//       },
-//       { transaction: t }
-//     );
-//     userPassword = await Relation.create(
-//       {
-//         userId: user.id,
-//         activationCode: email + user.initials + moment().valueOf(),
-//       },
-//       { transaction: t }
-//     );
-//   });
-//
-//   sendtype(res, 201, {
-//     message: 'ok',
-//     ...(!PROD ? { activationCode: userPassword.activationCode } : {}),
-//   });
-//
-//   sendMailMsg(
-//     inviteMsg(user, {
-//       inviterInitials: (req.user as User).initials,
-//       userPassword,
-//     })
-//   );
-// };
-
-
 import { Request } from 'polka';
 import { ServerResponse } from 'http';
 import { Accident } from '../models/Accident';
@@ -129,15 +56,47 @@ export const deletePerson = async (req: Request, res: ServerResponse) => {
 };
 
 
-export const createPerson = async (req: Request, res: ServerResponse) => {
-  const { person }  = req.params;
 
-console.log( req.query);
-  //await People.create();
-
-
-
-
-
-
+export const createAccident = async (req: Request, res: ServerResponse) => {
+  const { accident }  = req.body;
+  await Accident.create(accident);
+  sendtype(res, 200, {message: 'ok'});
 };
+
+export const editPerson = async (req: Request, res: ServerResponse) => {
+  const { id } = req.params;
+  const { person }  = req.body;
+  const personEdit = await People.findByPk(id);
+  if (!personEdit) {
+    return sendtype(res, 404, { message: 'Not found' });
+  }
+  await personEdit.update(person);
+  sendtype(res, 200, {message: 'ok'});
+};
+
+export const editAccident = async (req: Request, res: ServerResponse) => {
+  const { id } = req.params;
+  const { accident }  = req.body;
+  const accidentEdit = await Accident.findByPk(id);
+  if (!accidentEdit) {
+    return sendtype(res, 404, { message: 'Not found' });
+  }
+  await accidentEdit.update(accident);
+  sendtype(res, 200, {message: 'ok'});
+};
+
+export const createPerson = async (req: Request, res: ServerResponse) => {
+  const { person }  = req.body;
+  await People.create(person);
+  sendtype(res, 200, {message: 'ok'});
+};
+
+
+export const personAccidents = async (req: Request, res: ServerResponse) => {
+  const {accidents, person, role} = req.body.data;
+  for (const accident of accidents){
+    await Relation.findOrCreate({ where: { personId: person, accidentId: accident, role: role },
+      defaults: {personId: person, accidentId: accident, role: role} });
+  }
+  sendtype(res, 200, {message: 'ok'});
+    };

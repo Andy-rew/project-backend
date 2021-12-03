@@ -21,7 +21,14 @@ import { ENVIRONMENT, FRONTEND_APP_URL, SESSION_SECRET } from './util/secrets';
 
 // controllers
  import * as userController from './controllers/user';
-import { deleteAccidents, deletePerson, getAccidentsOfPerson, getPeople } from './controllers/user';
+import {
+  deleteAccidents,
+  deletePerson,
+  editAccident,
+  getAccidentsOfPerson,
+  getPeople,
+  personAccidents
+} from './controllers/user';
 // import * as loggingController from './controllers/logging';
 // import * as adminController from './controllers/admin';
 
@@ -133,6 +140,10 @@ app.get(`${pathPrefix}/people`, asyncHandler(userController.getPeople));
 app.get(`${pathPrefix}/accidents/date`, asyncHandler(userController.getAccidentsDate));
 app.delete(`${pathPrefix}/accidents/delete/:id`, asyncHandler(userController.deleteAccidents));
 app.delete(`${pathPrefix}/people/delete/:id`, asyncHandler(userController.deletePerson));
+app.put(`${pathPrefix}/people/set/:id`, asyncHandler(userController.editPerson));
+app.put(`${pathPrefix}/accidents/set/:id`, asyncHandler(userController.editAccident));
 app.post(`${pathPrefix}/people/create`, asyncHandler(userController.createPerson));
+app.post(`${pathPrefix}/accidents/create`, asyncHandler(userController.createAccident));
+app.post(`${pathPrefix}/accidents/set/personal`, asyncHandler(userController.personAccidents));
 
 export default app;
