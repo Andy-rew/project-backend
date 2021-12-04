@@ -26,7 +26,7 @@ import {
   deletePerson,
   editAccident,
   getAccidentsOfPerson,
-  getPeople,
+  getPeople, getProtocol,
   personAccidents
 } from './controllers/user';
 // import * as loggingController from './controllers/logging';
@@ -139,6 +139,7 @@ app.get(`${pathPrefix}/accidents/personal/:id`, asyncHandler(userController.getA
 app.get(`${pathPrefix}/people`, asyncHandler(userController.getPeople));
 app.get(`${pathPrefix}/accidents/date`, asyncHandler(userController.getAccidentsDate));
 app.delete(`${pathPrefix}/accidents/delete/:id`, asyncHandler(userController.deleteAccidents));
+app.get(`${pathPrefix}/accidents/protocol/:id`, asyncHandler(userController.getProtocol));
 app.delete(`${pathPrefix}/people/delete/:id`, asyncHandler(userController.deletePerson));
 app.put(`${pathPrefix}/people/set/:id`, asyncHandler(userController.editPerson));
 app.put(`${pathPrefix}/accidents/set/:id`, asyncHandler(userController.editAccident));

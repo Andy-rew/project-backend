@@ -100,3 +100,28 @@ export const personAccidents = async (req: Request, res: ServerResponse) => {
   }
   sendtype(res, 200, {message: 'ok'});
     };
+
+
+
+export const getProtocol = async (req: Request, res: ServerResponse) => {
+  const { id } = req.params;
+  const accident =  await Accident.findByPk(id);
+  const relations = await Relation.findAll({where:{
+      accidentId: id,
+    }});
+
+  const peopleRole = [];
+  for (const relation of relations){
+    const p = await People.findByPk(relation.personId);
+    peopleRole.push({ person: p, role: relation.role });
+  }
+
+sendtype(res, 200,{  info: accident.info, solution: accident.solution,
+  registerDate: accident.registerDate, people: peopleRole});
+
+
+
+
+
+
+};
