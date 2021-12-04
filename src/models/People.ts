@@ -25,12 +25,8 @@ export class People extends Model<People> {
   @HasMany(() => Relation)
   relationsLink: Relation[];
 
-  @BelongsToMany(() => Accident, () => Relation)
+  @BelongsToMany(() => Accident, () => Relation, 'personId')
   acccidentPerson: Accident[];
-
-  // @PrimaryKey
-  // @Column
-  // personId!: number;
 
   @Column
   name!: string;

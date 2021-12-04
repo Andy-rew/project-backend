@@ -19,7 +19,7 @@ export class Accident extends Model<Accident> {
   @HasMany(() => Relation)
   relationsLink: Relation[];
 
-  @BelongsToMany(() => People, () => Relation)
+  @BelongsToMany(() => People, () => Relation, 'accidentId')
   personAccident: People[];
 
   @PrimaryKey
